@@ -1,0 +1,49 @@
+Select all rows from the classes table.
+    SELECT * FROM classes;
+
+Select the name and credits from the classes table where the number of credits is greater than 3.
+    SELECT classes.name, classes.credits FROM classes WHERE classes.credits > 3
+
+All rows from the classes table where credits is an even number.
+    SELECT * FROM classes WHERE classes.credits % 2 = 0
+
+All of Tianna's enrollments that she hasn't yet received a grade for.
+    select * from enrollments left join students on enrollments.student_id = students.id where enrollments.grade is null and students.id = '1';
+
+All of Tianna's enrollments that she hasn't yet received a grade for, selected by her first name, not her student.id
+    SELECT * FROM enrollments LEFT JOIN students on enrollments.student_id = students.id WHERE enrollments.grade IS NULL AND students.first_name = 'Tianna';
+
+All of Tianna's enrollments that she hasn't yet received a grade for, selected by her first name, not her student.id, with the class name included in the result set.
+    select * from enrollments left join classes on enrollments.class_id = classes.id left join students on enrollments.student_id = students.id where enrollments.grade is null and students.first_name = 'Tianna';
+
+All students born before 1986 who have a 't' in their first or last name.
+    select * from students where birthdate < '1986-01-01' and first_name ilike '%t%' or last_name ilike '%t%';
+
+The average age of all the students.
+    select avg(date_part('year', age(students.birthdate))) from students;
+
+Addresses that have a space in their city name.
+    select * from addresses where city like '% %';
+
+Students & their addresses that live in a city with more than one word in the city name.
+    SELECT students.id, students.first_name, students.last_name, students.birthdate, students.address_id, addresses.line_1, addresses.city, addresses.city, addresses.state, addresses.zipcode FROM students INNER JOIN addresses ON students.address_id = addresses.id and addresses.city like '% %';
+
+The average number of credits for classes offered at the school.
+    select round(avg(credits)) from classes;
+
+The first and last name of all students who have received an 'A'.
+    select students.first_name, students.last_name from students inner join enrollments on students.id = enrollments.student_id where enrollments.grade = 'A';
+
+Each student's first name and the total credits they've enrolled in
+    select students.first_name, count(enrollments) from enrollments inner join students on enrollments.student_id = students.id group by students.first_name;
+
+The total number of credits each student has received a grade for.
+    select students.first_name, count(enrollments) from enrollments inner join students on enrollments.student_id = students.id where enrollments.grade is not NULL group by students.first_name;
+
+All enrollments, including the class name.
+    select enrollments.id, enrollments.student_id, enrollments.class_id, enrollments.grade, classes.name from enrollments left join classes on enrollments.class_id = classes.id;
+
+Students born between 1982-1985 (inclusive).
+    select * from students where extract(year from birthdate) >= '1982' and extract(year from birthdate) <= '1985';
+    
+Insert a new enrollment recording that Andre Rohan took PHYS 218 and got an A.
